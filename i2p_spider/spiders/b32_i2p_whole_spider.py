@@ -7,7 +7,7 @@ from datetime import datetime
 from scrapy.spiders import Rule
 from scrapy.linkextractors import LinkExtractor
 from scrapy_redis.spiders import RedisCrawlSpider
-from i2p_spider.items import I2pWholeNetworkItem
+from i2p_spider.items import HtmlItem
 
 logger = logging.getLogger(__name__)
 
