@@ -44,7 +44,7 @@ class StickyDepthSpiderMiddleware:
                 x.meta.setdefault('depth', key_found)
             yield x
 
-class TorWholeNetworkSpiderMiddleware(object):
+class I2pSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
@@ -92,7 +92,7 @@ class TorWholeNetworkSpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class TorWholeNetworkDownloaderMiddleware(object):
+class I2pDownloaderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
