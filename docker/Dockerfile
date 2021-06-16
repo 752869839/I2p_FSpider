@@ -34,7 +34,6 @@ RUN pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 EXPOSE 5000
 EXPOSE 6800
-EXPOSE 6801
 
 CMD /bin/bash
 

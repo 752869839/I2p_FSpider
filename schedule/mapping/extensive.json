@@ -1,7 +1,13 @@
 {
   "settings": {
     "number_of_shards" : 12,
-    "number_of_replicas": 1,
+    "number_of_replicas": 0,
+    "refresh_interval":"120s",
+    "translog":{
+        "flush_threshold_size":"512mb",
+        "sync_interval":"60s",
+        "durability":"async"
+      },
     "highlight" : {
           "max_analyzed_offset" : "60000000"
         },
