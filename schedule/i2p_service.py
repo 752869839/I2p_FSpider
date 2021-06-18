@@ -7,7 +7,7 @@ def getUrlFromDB():
     try:
 
         cur = mysql_conn.cursor()
-        cur.execute("SELECT url FROM webservice WHERE `status`=1 and type='eepsite'")
+        cur.execute("SELECT url FROM webservice WHERE  type='eepsite'")
         results = cur.fetchall()
         for domain in results:
             task_url = "http://" + domain[0]

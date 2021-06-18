@@ -23,7 +23,7 @@ def data_tran(spider_name):
             for e in ele:
                 e.getparent().remove(e)
             # if '.onion' in redis_data['url']:
-            index = 'widely'
+            index = 'extensive'
             actions = [{
                 "_index": index,
                 "_id": p_id(redis_data['domain'],

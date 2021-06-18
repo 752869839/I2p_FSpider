@@ -27,7 +27,7 @@ class I2pWholeNetworkPipeline(object):
         ele = response.xpath('//script | //noscript | //style')
         for e in ele:
             e.getparent().remove(e)
-        index = 'widely'
+        index = 'extensive'
         actions = [{
             "_index": index,
             "_id": p_id(item['domain'],htmlmin.minify(item['html'].encode('utf-8').decode('utf-8'), remove_all_empty_space=True)),
