@@ -1,6 +1,6 @@
 {
   "settings": {
-    "number_of_shards" : 12,
+    "number_of_shards" : 100,
     "number_of_replicas": 0,
     "refresh_interval":"120s",
     "translog":{
@@ -169,19 +169,16 @@
         "net_type": {
           "type": "keyword"
         },
-        "pgp": {
-          "type": "text"
-        },
         "mirror": {
           "type": "keyword"
         },
         "keywords": {
+          "type": "keyword"
+        },
+        "abstract": {
           "type": "text",
           "analyzer": "raw_plain",
           "fields": {
-            "raw": {
-              "type": "keyword"
-            },
             "english": {
               "type": "text",
               "analyzer": "english_plain"
@@ -223,25 +220,40 @@
         "qq": {
           "type": "keyword"
         },
-        "wechat_id": {
-          "type": "keyword"
-        },
-        "alipay_id": {
-          "type": "keyword"
-        },
         "card_id": {
           "type": "keyword"
         },
         "telegram_id": {
           "type": "keyword"
         },
+        "pgp": {
+          "type": "text"
+        },
         "phone_number": {
+          "type": "keyword"
+        },
+        "ip": {
+          "type": "keyword"
+        },
+        "wechat": {
+          "type": "keyword"
+        },
+        "bat": {
+          "type": "keyword"
+        },
+        "facebook": {
+          "type": "keyword"
+        },
+        "twitter": {
           "type": "keyword"
         },
         "bitcoin_addresses": {
           "type": "keyword"
         },
         "eth_addresses": {
+          "type": "keyword"
+        },
+        "reserved": {
           "type": "keyword"
         },
         "crawl_time": {

@@ -6,13 +6,14 @@ from lxml import etree
 from multiprocessing import Process
 from elasticsearch.helpers import bulk
 from sim_hash import p_id
-from extract_arithmetic import phone_extract,qq_extract,wechart_extract,alipay_extract,card_extract,tg_extract,pgp_extract,bitcoin_extract,eth_extract,email_extract
+from extract_arithmetic import phone_extract,qq_extract,wechart_extract,alipay_extract,card_extract,tg_extract,pgp_extract,bitcoin_extract,eth_extract,email_extract,ip_extract,bat_extract,facebook_extract,twitter_extract,keywords,keysentence
 from config import redis_client,es_client
 
 
 
 def data_tran(spider_name):
     n = 0
+    actions = []
     while True:
         time.sleep(0.01)
         try:
@@ -22,9 +23,9 @@ def data_tran(spider_name):
             ele = response.xpath('//script | //noscript | //style')
             for e in ele:
                 e.getparent().remove(e)
-            # if '.onion' in redis_data['url']:
-            index = 'extensive'
-            actions = [{
+            content = response.xpath("//html//body")[0].xpath("string(.)")
+            index = 'intelligence_cloud'
+            action = {
                 "_index": index,
                 "_id": p_id(redis_data['domain'],
                             htmlmin.minify(redis_data['html'].encode('utf-8').decode('utf-8'), remove_all_empty_space=True)),
@@ -32,37 +33,45 @@ def data_tran(spider_name):
                 "_source": {
                     "url": redis_data['url'],
                     "status": redis_data['status'],
-                    "net_type": 'i2p',
+                    "net_type": 'onion',
                     "domain": redis_data['domain'],
-                    "keywords": redis_data['keywords'],
                     "description": redis_data['description'],
+                    "keywords": keywords(content),
+                    "abstract": keysentence(content[0:50000]),
                     "title": redis_data['title'],
                     "html": redis_data['html'],
-                    "content": response.xpath("//html//body")[0].xpath("string(.)"),
+                    "content": content,
                     "language": redis_data['language'],
                     "encode": redis_data['encode'],
-                    "significance": '',
+                    # "significance": '',
                     "category": [],
                     "topic": [],
-                    "mirror": [],
-                    "phone_number": phone_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "qq": qq_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "wechat_id": wechart_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "alipay_id": alipay_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "card_id": card_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "telegram_id": tg_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "pgp": pgp_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "bitcoin_addresses": bitcoin_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "eth_addresses": eth_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                    "emails": email_extract(response.xpath("//html//body")[0].xpath("string(.)")),
+                    # "mirror": [],
+                    "phone_number": phone_extract(content),
+                    "qq": qq_extract(content),
+                    "card_id": card_extract(content),
+                    "telegram_id": tg_extract(content),
+                    "wechat": wechart_extract(content),
+                    "ip": ip_extract(content),
+                    "bat": bat_extract(content),
+                    "facebook": facebook_extract(content),
+                    "twitter": twitter_extract(content),
+                    "pgp": pgp_extract(content),
+                    "bitcoin_addresses": bitcoin_extract(content),
+                    "eth_addresses": eth_extract(content),
+                    "emails": email_extract(content),
                     "crawl_time": redis_data['crawl_time'],
                     "gmt_create": redis_data['crawl_time'],
                     "gmt_modified": redis_data['crawl_time'],
                 }
-            }]
-            success, _ = bulk(es_client, actions, index=index, raise_on_error=True)
-            n = n + 1
+            }
             print(n, redis_data['url'])
+            actions.append(action)
+            if len(actions) == 160:
+                success, _ = bulk(es_client, action, index=index, raise_on_error=False)
+                print('批量插入成功!')
+                actions.clear()
+
         except Exception as e:
             print(e)
 

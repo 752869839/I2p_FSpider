@@ -50,10 +50,7 @@ class I2pWholeSpider(RedisCrawlSpider):
             item['description'] = response.xpath('//*[@name="description"]/@content').extract_first()
         except:
             item['description'] = ''
-        try:
-            item['keywords'] = response.xpath('//*[@name="keywords"]/@content').extract_first()
-        except:
-            item['keywords'] = ''
+
         try:
             item['html'] = str(response.body, encoding='utf-8')
         except:

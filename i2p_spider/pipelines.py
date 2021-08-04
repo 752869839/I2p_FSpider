@@ -8,64 +8,14 @@ import re
 import hashlib
 import htmlmin
 import logging
-from lxml import etree
 from scrapy import Request
 from scrapy.utils.python import to_bytes
 from scrapy.pipelines.images import ImagesPipeline,FilesPipeline
 from scrapy.pipelines.files import FSFilesStore,S3FilesStore,GCSFilesStore
-from elasticsearch.helpers import bulk
 from seaweedfs.stores import WeedFilesStore
 from i2p_spider.sim_hash import p_id
-from i2p_spider.settings import es_conn
-from i2p_spider.extract_arithmetic import phone_extract,qq_extract,wechart_extract,alipay_extract,card_extract,tg_extract,pgp_extract,bitcoin_extract,eth_extract,email_extract
 
 logger = logging.getLogger(__name__)
-
-class I2pWholeNetworkPipeline(object):
-    def process_item(self, item, spider):
-        response = etree.HTML(item['html'].encode('utf-8'))
-        ele = response.xpath('//script | //noscript | //style')
-        for e in ele:
-            e.getparent().remove(e)
-        index = 'extensive'
-        actions = [{
-            "_index": index,
-            "_id": p_id(item['domain'],htmlmin.minify(item['html'].encode('utf-8').decode('utf-8'), remove_all_empty_space=True)),
-            # "_type": '_doc',
-            "_source": {
-                "url": item['url'],
-                "status": item['status'],
-                "net_type": 'onion',
-                "domain": item['domain'],
-                "keywords": item['keywords'],
-                "description": item['description'],
-                "title": item['title'],
-                "html": item['html'],
-                "content": response.xpath("//html//body")[0].xpath("string(.)"),
-                "language": item['language'],
-                "encode": item['encode'],
-                "significance": '',
-                "category": [],
-                "topic": [],
-                "mirror": [],
-                "phone_number": phone_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "qq": qq_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "wechat_id": wechart_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "alipay_id": alipay_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "card_id": card_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "telegram_id": tg_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "pgp": pgp_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "bitcoin_addresses": bitcoin_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "eth_addresses": eth_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "emails": email_extract(response.xpath("//html//body")[0].xpath("string(.)")),
-                "crawl_time": item['crawl_time'],
-                "gmt_create": item['crawl_time'],
-                "gmt_modified": item['crawl_time'],
-            }
-        }]
-        success, _ = bulk(es_conn, actions, index=index, raise_on_error=True)
-
-        return item
 
 class DownloadImagesPipeline(ImagesPipeline):
     STORE_SCHEMES = {
