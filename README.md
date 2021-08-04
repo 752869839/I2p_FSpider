@@ -6,13 +6,13 @@
 
 #(1)部署服务器(虚拟机)
 上传项目包到目标服务器,系统防火墙需开放5000、6800端口 并安装docker服务
-vim  /I2p_FSpider/docker/scrapyd_monitor.sh     修改相关配置为你部署机器ip
+vim  /I2p_FSpider/scrapyd_monitor.sh     修改相关配置为你部署机器ip
 docker build -t scrapydcloud:latest .           镜像构建时间可能较长耐心等待
 docker run -itd --restart=always --name=scrapydcloud -p 5000:5000 -p 6800:6800  -v /root/data:/root/data -h scrapydcloud -w /code scrapydcloud:latest /bin/bash  运行并启动容器
 外部配置定时任务 crontab -e  配置内容为/I2p_FSpider/docker/crontab.txt中内容
 
 #(2)创建mapping
-vim /I2p_FSpider/schedule/mapping/extensive_mapping说明.txt  查看mapping说明 ip修改为es地址 按说明执行
+vim /I2p_FSpider/schedule/mapping/intelligence_cloud.json说明  查看mapping说明 ip修改为es地址 按说明执行
 
 #(3)浏览器访问
 你部署ip:5000端口  http://x.x.x.x:5000/       scrapydweb出现代表部署成功
