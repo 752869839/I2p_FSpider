@@ -37,7 +37,7 @@ def data_tran(spider_name):
                 "_source": {
                     "url": redis_data['url'],
                     "status": redis_data['status'],
-                    "net_type": 'onion',
+                    "net_type": 'i2p',
                     "domain": redis_data['domain'],
                     "description": redis_data['description'],
                     "keywords": keywords(content),
@@ -70,10 +70,11 @@ def data_tran(spider_name):
                 }
             }
             n += 1
-            print(n, redis_data['url'])
+            # print(n, redis_data['url'])
+            print(n)
             actions.append(action)
-            if len(actions) == 80:
-                success, _ = bulk(es_client, action, index=index, raise_on_error=False)
+            if len(actions) == 40:
+                success, _ = bulk(es_client, actions, index=index, raise_on_error=True)
                 print('批量插入成功!')
                 actions.clear()
 
@@ -84,7 +85,7 @@ def task_schdule():
     processes = []
     name = ['b32_i2p_whole_spider']
     spder_name_list = []
-    for i in range(8):
+    for i in range(4):
         spder_name_list.extend(name)
 
     for i, spider_name in enumerate(spder_name_list):
