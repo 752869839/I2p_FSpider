@@ -24,6 +24,10 @@ def data_tran(spider_name):
             for e in ele:
                 e.getparent().remove(e)
             content = response.xpath("//html//body")[0].xpath("string(.)")
+            try:
+                encode = redis_data['encode'],
+            except:
+                encode = ''
             index = 'intelligence_cloud'
             action = {
                 "_index": index,
@@ -42,7 +46,7 @@ def data_tran(spider_name):
                     "html": redis_data['html'],
                     "content": content,
                     "language": redis_data['language'],
-                    "encode": redis_data['encode'],
+                    "encode": encode,
                     # "significance": '',
                     "category": [],
                     "topic": [],
@@ -65,9 +69,10 @@ def data_tran(spider_name):
                     "gmt_modified": redis_data['crawl_time'],
                 }
             }
+            n += 1
             print(n, redis_data['url'])
             actions.append(action)
-            if len(actions) == 160:
+            if len(actions) == 80:
                 success, _ = bulk(es_client, action, index=index, raise_on_error=False)
                 print('批量插入成功!')
                 actions.clear()
@@ -79,7 +84,7 @@ def task_schdule():
     processes = []
     name = ['b32_i2p_whole_spider']
     spder_name_list = []
-    for i in range(32):
+    for i in range(8):
         spder_name_list.extend(name)
 
     for i, spider_name in enumerate(spder_name_list):
