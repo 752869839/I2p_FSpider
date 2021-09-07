@@ -13,7 +13,7 @@ from datetime import datetime
 from elasticsearch import Elasticsearch
 
 #proxy
-HTTP_PROXY = ["http://139.180.220.76:4000","http://139.180.220.76:4001","http://139.180.220.76:4002","http://139.180.220.76:4003","http://139.180.220.76:4004"]
+HTTP_PROXY = ["http://8.210.121.248:39904","http://47.56.197.215:39901","http://139.180.220.76:4000","http://139.180.220.76:4001","http://139.180.220.76:4002","http://139.180.220.76:4003","http://139.180.220.76:4004"]
 
 # redis
 REDIS_HOST = '172.16.30.65'
